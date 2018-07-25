@@ -6,8 +6,7 @@
 package com.microsoft.azure.spring.cloud.autoconfigure.telemetry;
 
 import com.microsoft.applicationinsights.TelemetryClient;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.lang.NonNull;
 import org.springframework.util.StringUtils;
 
@@ -15,8 +14,8 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
+@Slf4j
 public class TelemetryTracker {
-    private static final Logger LOG = LoggerFactory.getLogger(TelemetryTracker.class);
 
     private static final String PROJECT_VERSION = TelemetryTracker.class.getPackage().getImplementationVersion();
 
@@ -65,7 +64,7 @@ public class TelemetryTracker {
         TelemetryClient client = new TelemetryClient();
 
         if (!isValid(instrumentationKey)) {
-            LOG.warn("Telemetry instrumentationKey {} is invalid", instrumentationKey);
+            log.warn("Telemetry instrumentationKey {} is invalid", instrumentationKey);
             throw new IllegalArgumentException("Telemetry instrumentationKey is invalid");
         }
 
