@@ -1,9 +1,10 @@
 package com.microsoft.azure.servicebus.stream.binder.provisioning;
 
+import com.microsoft.azure.management.servicebus.ServiceBusNamespace;
+import com.microsoft.azure.management.servicebus.Topic;
 import com.microsoft.azure.servicebus.stream.binder.properties.ServiceBusConsumerProperties;
 import com.microsoft.azure.servicebus.stream.binder.properties.ServiceBusProducerProperties;
 import com.microsoft.azure.spring.cloud.context.core.AzureAdmin;
-import com.microsoft.azure.spring.cloud.context.core.Tuple;
 import org.springframework.cloud.stream.binder.ExtendedConsumerProperties;
 import org.springframework.cloud.stream.binder.ExtendedProducerProperties;
 import org.springframework.cloud.stream.provisioning.ConsumerDestination;
@@ -25,22 +26,24 @@ public class ServiceBusChannelProvisioner implements ProvisioningProvider<Extend
     }
 
     @Override
-    public ProducerDestination provisionProducerDestination(String name,
+    public ProducerDestination provisionProducerDestination(String topicName,
                                                             ExtendedProducerProperties<ServiceBusProducerProperties> properties) throws ProvisioningException {
-        this.azureAdmin.getOrCreateEventHub(namespace, name);
+        ServiceBusNamespace serviceBusNamespace = this.azureAdmin.getOrCreateServiceBusNamespace(namespace);
+        this.azureAdmin.getOrCreateServiceBusTopic(serviceBusNamespace, topicName);
 
-        return new ServiceBusProducerDestination(name);
+        return new ServiceBusProducerDestination(topicName);
     }
 
     @Override
-    public ConsumerDestination provisionConsumerDestination(String name, String group,
+    public ConsumerDestination provisionConsumerDestination(String topicName, String subcriptionGroup,
                                                             ExtendedConsumerProperties<ServiceBusConsumerProperties> properties) throws ProvisioningException {
-        if (this.azureAdmin.getEventHub(Tuple.of(namespace, name)) == null) {
+        Topic topic = this.azureAdmin.getServiceBusTopic(namespace, topicName);
+        if (topic == null) {
             throw new ProvisioningException(
-                    String.format("Event hub with name '%s' in namespace '%s' not existed", name, namespace));
+                    String.format("Service bus topic with name '%s' in namespace '%s' not existed", topicName, namespace));
         }
 
-        this.azureAdmin.getOrCreateEventHubConsumerGroup(namespace, name, group);
-        return new ServiceBusConsumerDestination(name);
+        this.azureAdmin.getOrCreateServiceBusTopicSubscription(topic, subcriptionGroup);
+        return new ServiceBusConsumerDestination(subcriptionGroup);
     }
 }

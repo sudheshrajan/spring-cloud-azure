@@ -177,6 +177,14 @@ public class AzureAdmin {
         return getOrCreate(this::getServiceBusQueue, this::createServiceBusQueue).apply(Tuple.of(namespace, name));
     }
 
+    public Topic getServiceBusTopic(String namespace, String name) {
+        ServiceBusNamespace serviceBusNamespace = this.getServiceBusNamespace(namespace);
+        if (serviceBusNamespace == null) {
+            return null;
+        }
+        return serviceBusNamespace.topics().getByName(name);
+    }
+
     public Topic getServiceBusTopic(Tuple<ServiceBusNamespace, String> namespaceAndTopicName) {
         return namespaceAndTopicName.getFirst().topics().getByName(namespaceAndTopicName.getSecond());
     }
