@@ -14,6 +14,7 @@ import org.springframework.cloud.stream.provisioning.ConsumerDestination;
 import org.springframework.cloud.stream.provisioning.ProducerDestination;
 import org.springframework.integration.core.MessageProducer;
 import org.springframework.integration.expression.FunctionExpression;
+import org.springframework.lang.NonNull;
 import org.springframework.messaging.Message;
 import org.springframework.messaging.MessageChannel;
 import org.springframework.messaging.MessageHandler;
@@ -31,8 +32,8 @@ public class ServiceBusMessageChannelBinder
     private ServiceBusExtendedBindingProperties bindingProperties = new ServiceBusExtendedBindingProperties();
 
     public ServiceBusMessageChannelBinder(String[] headersToEmbed,
-                                          ServiceBusChannelProvisioner provisioningProvider,
-                                          ServiceBusTopicOperation serviceBusTopicOperation) {
+                                          @NonNull ServiceBusChannelProvisioner provisioningProvider,
+                                          @NonNull ServiceBusTopicOperation serviceBusTopicOperation) {
         super(headersToEmbed, provisioningProvider);
         this.serviceBusTopicOperation = serviceBusTopicOperation;
     }

@@ -6,5 +6,5 @@ import lombok.Setter;
 @Getter
 @Setter
 public class ServiceBusConsumerProperties {
-    private String resourceGroup;
+    private String consumerGroup;
 }

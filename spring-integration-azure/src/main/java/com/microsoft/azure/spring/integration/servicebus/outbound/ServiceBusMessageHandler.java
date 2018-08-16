@@ -11,6 +11,7 @@ import com.microsoft.azure.spring.integration.core.AbstractAzureMessageHandler;
 import com.microsoft.azure.spring.integration.core.SendOperation;
 import org.springframework.messaging.Message;
 import org.springframework.messaging.MessageHeaders;
+import org.springframework.util.MimeType;
 
 import java.nio.charset.Charset;
 import java.util.UUID;
@@ -43,7 +44,7 @@ public class ServiceBusMessageHandler extends AbstractAzureMessageHandler<IMessa
         }
 
         if (message.getHeaders().containsKey(MessageHeaders.CONTENT_TYPE)) {
-            serviceBusMessage.setContentType(message.getHeaders().get(MessageHeaders.CONTENT_TYPE, String.class));
+            serviceBusMessage.setContentType(message.getHeaders().get(MessageHeaders.CONTENT_TYPE, MimeType.class).getType());
         }
 
         if (message.getHeaders().containsKey(MessageHeaders.ID)) {

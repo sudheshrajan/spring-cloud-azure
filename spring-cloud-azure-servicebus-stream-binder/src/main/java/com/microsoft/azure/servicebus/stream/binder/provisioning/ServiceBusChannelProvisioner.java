@@ -5,6 +5,7 @@ import com.microsoft.azure.management.servicebus.Topic;
 import com.microsoft.azure.servicebus.stream.binder.properties.ServiceBusConsumerProperties;
 import com.microsoft.azure.servicebus.stream.binder.properties.ServiceBusProducerProperties;
 import com.microsoft.azure.spring.cloud.context.core.AzureAdmin;
+import com.microsoft.azure.spring.cloud.context.core.Tuple;
 import org.springframework.cloud.stream.binder.ExtendedConsumerProperties;
 import org.springframework.cloud.stream.binder.ExtendedProducerProperties;
 import org.springframework.cloud.stream.provisioning.ConsumerDestination;
@@ -37,13 +38,14 @@ public class ServiceBusChannelProvisioner implements ProvisioningProvider<Extend
     @Override
     public ConsumerDestination provisionConsumerDestination(String topicName, String subcriptionGroup,
                                                             ExtendedConsumerProperties<ServiceBusConsumerProperties> properties) throws ProvisioningException {
-        Topic topic = this.azureAdmin.getServiceBusTopic(namespace, topicName);
+        ServiceBusNamespace namespace = this.azureAdmin.getOrCreateServiceBusNamespace(this.namespace);
+        Topic topic = this.azureAdmin.getServiceBusTopic(Tuple.of(namespace, topicName));
         if (topic == null) {
             throw new ProvisioningException(
                     String.format("Service bus topic with name '%s' in namespace '%s' not existed", topicName, namespace));
         }
 
         this.azureAdmin.getOrCreateServiceBusTopicSubscription(topic, subcriptionGroup);
-        return new ServiceBusConsumerDestination(subcriptionGroup);
+        return new ServiceBusConsumerDestination(topicName);
     }
 }

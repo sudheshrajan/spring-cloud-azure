@@ -6,26 +6,19 @@
 
 package com.example;
 
-import java.time.LocalDateTime;
-
-/**
- * @author Warren Zhu
- */
 public class UserMessage {
 
     private String body;
 
     private String username;
 
-    private LocalDateTime createdAt;
 
     public UserMessage() {
     }
 
-    public UserMessage(String body, String username, LocalDateTime createdAt) {
+    public UserMessage(String body, String username) {
         this.body = body;
         this.username = username;
-        this.createdAt = createdAt;
     }
 
     public String getBody() {
@@ -44,17 +37,8 @@ public class UserMessage {
         this.username = username;
     }
 
-    public LocalDateTime getCreatedAt() {
-        return this.createdAt;
-    }
-
-    public void setCreatedAt(LocalDateTime createdAt) {
-        this.createdAt = createdAt;
-    }
-
     @Override
     public String toString() {
-        return "UserMessage{" + "body='" + body + '\'' + ", username='" + username + '\'' + ", createdAt=" + createdAt +
-                '}';
+        return "UserMessage{" + "body='" + body + '\'' + ", username='" + username + '\'' + '}';
     }
 }

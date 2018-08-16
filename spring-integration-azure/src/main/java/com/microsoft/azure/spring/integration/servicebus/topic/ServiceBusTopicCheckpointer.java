@@ -21,8 +21,9 @@ public class ServiceBusTopicCheckpointer implements Checkpointer<IMessage> {
 
     @Override
     public CompletableFuture<Void> checkpoint() {
-        // Service bus unsupported
-        throw new UnsupportedOperationException();
+        CompletableFuture<Void> future = new CompletableFuture<>();
+        future.complete(null);
+        return future;
     }
 
     @Override

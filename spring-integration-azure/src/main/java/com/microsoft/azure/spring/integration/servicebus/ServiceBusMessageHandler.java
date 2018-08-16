@@ -41,4 +41,5 @@ public class ServiceBusMessageHandler implements IMessageHandler {
     public void notifyException(Throwable exception, ExceptionPhase phase) {
         LOGGER.error(String.format("Exception encountered in phase %s", phase), exception);
     }
+
 }

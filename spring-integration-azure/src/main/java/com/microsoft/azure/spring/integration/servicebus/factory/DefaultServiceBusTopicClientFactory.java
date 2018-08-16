@@ -54,7 +54,7 @@ public class DefaultServiceBusTopicClientFactory extends AbstractServiceBusSende
 
         try {
             return new SubscriptionClient(
-                    new ConnectionStringBuilder(getConnectionStringCreator().apply(nameAndSubscription.getFirst())),
+                    new ConnectionStringBuilder(getConnectionStringCreator().apply(nameAndSubscription.getFirst() + "/subscriptions/" + nameAndSubscription.getSecond())),
                     ReceiveMode.PEEKLOCK);
         } catch (InterruptedException | ServiceBusException e) {
             throw new ServiceBusRuntimeException("Failed to create service bus subscription client", e);

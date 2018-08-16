@@ -9,10 +9,9 @@ import com.microsoft.applicationinsights.core.dependencies.apachecommons.codec.d
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 
-import java.net.InetAddress;
 import java.net.NetworkInterface;
-import java.net.SocketException;
-import java.net.UnknownHostException;
+import java.util.Collections;
+import java.util.List;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class MacAddressHelper {
@@ -22,17 +21,27 @@ public class MacAddressHelper {
     private static final String hashedMacAddress = computeHashedMacAddress();
 
     private static String computeHashedMacAddress() {
-        try {
-            InetAddress host = InetAddress.getLocalHost();
-            byte[] macBytes = NetworkInterface.getByInetAddress(host).getHardwareAddress();
+        byte[] macBytes = getMacAddressByNetworkInterface();
 
-            return DigestUtils.sha256Hex(macBytes);
-        } catch (UnknownHostException | SocketException ignore) {
-            return UNKNOWN_MAC;
-        }
+        return DigestUtils.sha256Hex(macBytes);
     }
 
     public static String getHashedMacAddress() {
         return hashedMacAddress;
+    }
+
+    private static byte[] getMacAddressByNetworkInterface() {
+        try {
+            List<NetworkInterface> nis = Collections.list(NetworkInterface.getNetworkInterfaces());
+            for (NetworkInterface ni : nis) {
+                byte[] macBytes = ni.getHardwareAddress();
+                if (macBytes != null && macBytes.length > 0) {
+                    return macBytes;
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return "02:00:00:00:00:00".getBytes();
     }
 }
